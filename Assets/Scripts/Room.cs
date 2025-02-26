@@ -11,6 +11,6 @@ public class Room : ScriptableObject
     public string description;
     public Exit[] exits;
 
-    public bool haasKey;
-    public bool haasOrb;
+    public bool hasKey;
+    public bool hasOrb;
 }

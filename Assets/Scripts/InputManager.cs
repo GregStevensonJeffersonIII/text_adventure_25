@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
     public InputField userInput; // the input field object
     public Text inputText; // part of the input field where user enters response
     public Text placeHolderText; // part of the input field for initial placeholder text
+   // public Button button;
     
     private string story; // holds the story to display
     private List<string> commands = new List<string>();
@@ -31,22 +32,53 @@ public class InputManager : MonoBehaviour
         commands.Add("go");
         commands.Add("get");
 
-        userInput.onEndEdit.AddListener(UpdateStory);
+        userInput.onEndEdit.AddListener(GetInput);
+       // button.onClick.AddListener(DoSomething);
         story = storyText.text;
     }
-
+/*
+    void DoSomething() {
+        Debug.Log("stuff");
+    }
+*/
     public void UpdateStory(string msg)
     {
-        if (msg != "") {
-            char[] splitInfo = {' '};
-            string[] parts=msg.ToLower().Split(splitInfo);//['go','north']
-            if (commands.Contains(parts[0])) {
-                story += "\n" + msg;
-                storyText.text = story;
+        story += "\n" + msg;
+        storyText.text = story;
+
+    }
+    private void GetInput(string msg) {
+        if (msg != "")
+        {
+            char[] splitInfo = { ' ' };
+            string[] parts = msg.ToLower().Split(splitInfo);//['go','north']
+            if (commands.Contains(parts[0]))
+            {
+                if (parts[0] == "go")
+                {
+                    if (NavigationManager.Instance.SwitchRooms(parts[1]))
+                    {
+                        //fill later
+                    }
+                    else
+                    {
+                        UpdateStory("You walked into a wall you moron");
+                    }
+                }
+            }
+            else if (parts[0]=="get") {
+                if (NavigationManager.Instance.TakeItem(parts[1]))
+                {
+                    Debug.Log("orb?");
+                    GameManager.instance.inventory.Add(parts[1]);
+                    UpdateStory("You added " + parts[1] + " to your inventory");
+                }
+                else
+                {
+                    UpdateStory("Gwt What!? There ain't nothin like that in here");
+                }
             }
         }
-
-
         //reset
         userInput.text = "";
         userInput.ActivateInputField();
