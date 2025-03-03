@@ -27,6 +27,18 @@ public class NavigationManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        InputManager.instance.onRestart += RestartGame;
+        /*
+        toKeyNorth.isHidden = true;
+        currRoom = startingRoom;
+        Unpack();
+        */
+        RestartGame();
+    }
+
+    private void RestartGame() {
+        exitRooms.Clear();
+        toKeyNorth.isHidden = true;
         currRoom = startingRoom;
         Unpack();
     }
@@ -46,14 +58,27 @@ public class NavigationManager : MonoBehaviour
     }
 
     public bool SwitchRooms(string direction) {
-        if (exitRooms.ContainsKey(direction)) {
-            currRoom=exitRooms[direction];
-            InputManager.instance.UpdateStory("You go "+direction);
-            exitRooms.Clear();
-            Unpack();
-            return true;
+        if (exitRooms.ContainsKey(direction))
+        {
+            if (!GetExit(direction).isLocked || GameManager.instance.inventory.Contains("key"))
+            {
+                currRoom = exitRooms[direction];
+                InputManager.instance.UpdateStory("You go " + direction);
+                exitRooms.Clear();
+                Unpack();
+                return true;
+            }
         }
         return false;
+    }
+    public Exit GetExit(string direction) {
+        foreach (Exit e in currRoom.exits) {
+            if (e.direction.ToString()==direction) {
+                return e;
+            }
+        }
+        return null;
+
     }
     public bool TakeItem(string item) {
         if (currRoom.hasKey && item=="key") {

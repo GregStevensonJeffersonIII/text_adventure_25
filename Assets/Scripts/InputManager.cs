@@ -12,7 +12,10 @@ public class InputManager : MonoBehaviour
     public InputField userInput; // the input field object
     public Text inputText; // part of the input field where user enters response
     public Text placeHolderText; // part of the input field for initial placeholder text
-   // public Button button;
+                                 // public Button button;
+    //delegate things
+    public delegate void Restart();
+    public event Restart onRestart;
     
     private string story; // holds the story to display
     private List<string> commands = new List<string>();
@@ -31,6 +34,7 @@ public class InputManager : MonoBehaviour
     {
         commands.Add("go");
         commands.Add("get");
+        commands.Add ("restart");
 
         userInput.onEndEdit.AddListener(GetInput);
        // button.onClick.AddListener(DoSomething);
@@ -62,20 +66,26 @@ public class InputManager : MonoBehaviour
                     }
                     else
                     {
-                        UpdateStory("You walked into a wall you moron");
+                        UpdateStory("You walked into a wall or a locked door you moron");
                     }
                 }
-            }
-            else if (parts[0]=="get") {
-                if (NavigationManager.Instance.TakeItem(parts[1]))
+
+                else if (parts[0] == "get")
                 {
-                    Debug.Log("orb?");
-                    GameManager.instance.inventory.Add(parts[1]);
-                    UpdateStory("You added " + parts[1] + " to your inventory");
+                    if (NavigationManager.Instance.TakeItem(parts[1]))
+                    {
+                        GameManager.instance.inventory.Add(parts[1]);
+                        UpdateStory("You added " + parts[1] + " to your inventory");
+                    }
+                    else
+                    {
+                        UpdateStory("Gwt What!? There ain't nothin like that in here");
+                    }
                 }
-                else
+                else if (parts[0] == "restart")
                 {
-                    UpdateStory("Gwt What!? There ain't nothin like that in here");
+                    if(onRestart!=null)
+                        onRestart();
                 }
             }
         }

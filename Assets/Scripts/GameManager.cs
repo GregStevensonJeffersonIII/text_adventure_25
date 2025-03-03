@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 
     public List<string> inventory=new List<string>();
 
+    
     private void Awake()
     {
         if (instance == null)
@@ -20,6 +21,10 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        InputManager.instance.onRestart += RestartGame;
+    }
+
+    private void RestartGame() { 
+        inventory.Clear();
     }
 }
