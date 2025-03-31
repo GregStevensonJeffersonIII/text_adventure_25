@@ -9,6 +9,8 @@ public class NavigationManager : MonoBehaviour
     public static NavigationManager Instance;
     public Room startingRoom;
     public Room currRoom;
+    public Room orbRoom;//for restart
+    public Room keyRoom;//
     public List<Room> rooms;
 
     //game over delegate
@@ -46,6 +48,8 @@ public class NavigationManager : MonoBehaviour
     public void RestartGame() {
         toKeyNorth.isHidden = true;
         currRoom = startingRoom;
+        orbRoom.hasOrb=true;
+        keyRoom.hasKey=true;
         Unpack();
     }
 

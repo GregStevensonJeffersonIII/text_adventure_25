@@ -36,6 +36,8 @@ public class InputManager : MonoBehaviour
         commands.Add("get");
         commands.Add ("restart");
         commands.Add("save");
+        commands.Add("commands");
+        commands.Add("inventory");
 
         userInput.onEndEdit.AddListener(GetInput);
        // button.onClick.AddListener(DoSomething);
@@ -90,12 +92,23 @@ public class InputManager : MonoBehaviour
                 }
                 else if (parts[0] == "restart")
                 {
-                    if(onRestart!=null)
+                    if (onRestart != null)
                         onRestart();
                 }
                 else if (parts[0] == "save")
                 {
                     GameManager.instance.Save();
+                }
+                else if (parts[0] == "commands")
+                {
+                    string com = "Commands:  ";//temp variable
+                    foreach(string e in commands)
+                        com+= e+"  ";
+                        UpdateStory(com);
+                }
+                else if (parts[0] == "inventory")
+                {
+                    UpdateStory(GameManager.instance.ListInventory());
                 }
             }
         }

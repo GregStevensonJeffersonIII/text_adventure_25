@@ -7,6 +7,6 @@ using UnityEngine;
 public class SaveState
 {
     public string currentRoom;
-
+    public List<string> inventory;
 
 }

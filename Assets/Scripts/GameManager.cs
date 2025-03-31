@@ -8,9 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public List<string> inventory=new List<string>();
-
-    
+    public List<string> inventory=new List<string>();    
     private void Awake()
     {
         if (instance == null)
@@ -34,6 +32,8 @@ public class GameManager : MonoBehaviour
             FileStream afile = File.Open(Application.persistentDataPath + "/player.save", FileMode.Open);
             SaveState playerData=(SaveState)bf.Deserialize(afile); 
             NavigationManager.Instance.SetRoom(playerData.currentRoom);
+            inventory=playerData.inventory;
+            afile.Close();
         }else
             NavigationManager.Instance.RestartGame();
     }
@@ -46,10 +46,20 @@ public class GameManager : MonoBehaviour
     {
         SaveState playerState = new SaveState();
         playerState.currentRoom = NavigationManager.Instance.currRoom.name;
-
+        playerState.inventory = inventory;
         BinaryFormatter bf = new BinaryFormatter();
         FileStream afile = File.Create(Application.persistentDataPath + "/player.save");
         bf.Serialize(afile, playerState);
         afile.Close();
     }
+
+    public string ListInventory()
+    {
+        string inv = "Inventory:  ";//our new temp named micheal. Say hi micheal.      hi
+        if(inventory!=null)
+        foreach (string e in inventory)
+            inv += e + "  ";
+        return inv;
+    }
+    
 }
